@@ -1,0 +1,70 @@
+Heike
+=====
+
+## Laden der Daten und Pakete, eventuell Formatierung der Spalten
+
+```{r message=FALSE, results='hide'}
+library(Hmisc)
+library(ggplot2)
+library(icd)
+library(xts)
+
+data <- spss.get("Testdatei_NPE.sav", use.value.labels=TRUE)
+
+data$AUFNDATUM <- as.Date(data$AUFNDATUM, "%d.%m.%y")
+data$AUFNDATUM.YEAR <-factor(format(data$AUFNDATUM,"%Y"))
+data$AUFNDATUM.MONTH <-factor(format(data$AUFNDATUM,"%m"))
+```
+
+# Kodierung der Diagnosevariablen von ICD10 zu bool
+
+```{r}
+# In den AUFNDIAG.1 und AUFNDIAG2 schauen ob ICD matched
+data$diagnose_C80 <- ifelse((grepl("*", data$AUFNDIAG.1) | grepl("O09.6", data$AUFNDIAG2)), TRUE, FALSE)
+
+# Gruppiert die Fallzahlen nach Jahren
+diagnosis_count.yearly <- setNames(aggregate(data$diagnose_C80, list(data$AUFNDATUM.YEAR), FUN=sum), c("Year", "Count"))
+# Macht aus den Jahren ein Datumstempel (fuer eine R Zeitreihe sinnvoll)
+diagnosis_count.yearly$Year <- as.Date(as.character(diagnosis_count.yearly$Year),format="%Y")
+# R timeseries object (ueber umweg von xts)
+diagnosis_count_ts.yearly <- as.ts(xts(diagnosis_count.yearly$Count,diagnosis_count.yearly$Year))
+
+```
+
+2. Plots
+
+```{r fig.width=7, fig.height=6}
+p <- ggplot(diagnosis_count.yearly,  aes(x=Year, y=Count, group=1)) 
+p + geom_line() + geom_smooth(method = "lm", se = TRUE)
+```
+
+### Arima Forecast model
+
+```{r fig.width=7, fig.height=6}
+library(devtools)
+library(ggfortify)
+library(forecast)
+d.arima <- auto.arima(diagnosis_count_ts.yearly)
+d.forecast <- forecast(d.arima, level = c(95), h = 10)
+autoplot(d.forecast, ts.colour = 'firebrick1', predict.colour = 'red',
+         predict.linetype = 'dashed', conf.int = FALSE)
+```
+
+
+## TSCOUNT, time series glm fit und prediction
+```{r}
+library(tscount)
+# fitted das model basierend auf einem sliding window der letzten 5 beoabchtungen
+tsglm.fit <- tsglm(ts=diagnosis_count_ts.yearly, model=list(past_obs=c(1, 5)), link="log", distr="pois")
+# Ausgabe der Modelparameter
+summary(tsglm.fit)
+cnt <- tsglm.fit$fitted.values
+tail(cnt, 3)
+
+# Benutze das gefitte Model um eine Vorhersage fuer die naechsten 10 Jahre zu treffen
+predict(tsglm.fit, n.ahead = 10)
+
+```
+
+
+
