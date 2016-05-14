@@ -12,7 +12,7 @@ source("install_requirements.r")
 
 ```
 library(rmarkdown)
-rrender("Heike.Rmd", html_document())
+render("Heike.Rmd", html_document())
 render("Heike.Rmd", pdf_document())
 ```
 
