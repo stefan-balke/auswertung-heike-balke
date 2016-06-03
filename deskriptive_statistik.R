@@ -1,10 +1,5 @@
+source('load_data.R')
 library(ggplot2)
-
-data <- spss.get("Testdatei_NPE.sav", use.value.labels=TRUE)
-
-data$AUFNDATUM <- as.Date(data$AUFNDATUM, "%d.%m.%y")
-data$AUFNDATUM.YEAR <- format(data$AUFNDATUM,"%Y")
-data$AUFNDATUM.MONTH <- format(data$AUFNDATUM,"%m")
 
 # ---------------------------------
 # Alter
@@ -24,7 +19,6 @@ p + scale_fill_discrete(name="Gruppen",
 # ---------------------------------
 # BMI
 # ---------------------------------
-data$bmi <- data$KGERSTUNT / (data$LAENGE/100)^2
 p <- ggplot(data, aes(factor(AUFNDATUM.YEAR), bmi)) + geom_boxplot()
 p + labs(x = "Jahr", y = "BMI")
 
@@ -39,7 +33,7 @@ p + scale_fill_discrete(name="Gruppen",
   labs(x = "Jahr", y = "Anzahl")
 
 # ---------------------------------
-# Einling/Mehrling
+# Erstgebärende/Mehrgebärende
 # ---------------------------------
 data$geburten <- (data$ANZSSVORHLG + data$ANZSSVORHTG)
 data$geburten[is.na(data$geburten)] <- 0
