@@ -4,7 +4,7 @@ data <- spss.get("Testdatei_NPE.sav", use.value.labels=TRUE)
 
 # Aufnahmedatum splitten
 data$AUFNDATUM <- as.Date(data$AUFNDATUM, "%d.%m.%y")
-data$AUFNDATUM.YEAR <- format(data$AUFNDATUM,"%Y")
+data$AUFNDATUM.YEAR <- as.numeric(format(data$AUFNDATUM,"%Y"))
 data$AUFNDATUM.MONTH <- format(data$AUFNDATUM,"%m")
 
 # Alter berechnen

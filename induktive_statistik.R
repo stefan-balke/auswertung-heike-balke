@@ -26,5 +26,5 @@ summary(glm.fit02)
 # Hypothese 3:
 # Gibt es einen ansteigenden Trend an PE Erkrankungen in den letzten Jahren…
 # ---------------------------------------------------------------------------------------------------
-glm.fit03 <- glm(hypertonie ~ AUFNDATUM, data=data, family=poisson)
+glm.fit03 <- glm(hypertonie ~ factor(AUFNDATUM), data=data, family=poisson)
 summary(glm.fit03)
