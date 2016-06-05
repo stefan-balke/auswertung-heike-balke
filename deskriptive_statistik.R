@@ -5,9 +5,9 @@ library(ggplot2)
 # Alter
 # ---------------------------------------------------------------------------------------------------
 data$alter_gruppe <- rep(0, nrow(data))
-data[data$alter<20, ]$alter_gruppe <- 1
-data[data$alter>=20 & data$alter<35, ]$alter_gruppe = 2
-data[data$alter>=35, ]$alter_gruppe = 3
+data[data$alter<20, ]$alter_gruppe <- 0
+data[data$alter>=20 & data$alter<35, ]$alter_gruppe = 1
+data[data$alter>=35, ]$alter_gruppe = 2
 
 pdf("plots/01_alter.pdf")
 p <- ggplot(data, aes(AUFNDATUM.YEAR, fill=factor(alter_gruppe))) + geom_bar(position="dodge")
@@ -19,9 +19,23 @@ dev.off()
 # ---------------------------------------------------------------------------------------------------
 # BMI
 # ---------------------------------------------------------------------------------------------------
-pdf("plots/02_bmi.pdf")
+data$bmi_gruppe <- rep(0, nrow(data))
+data[data$bmi<17.5 & !is.na(data$bmi), ]$bmi_gruppe <- 0
+data[data$bmi>=17.5 & data$bmi<24 & !is.na(data$bmi), ]$bmi_gruppe = 1
+data[data$bmi>=24 & data$bmi<33.9 & !is.na(data$bmi), ]$bmi_gruppe = 2
+data[data$bmi>=34 & !is.na(data$bmi), ]$bmi_gruppe = 3
+
+pdf("plots/02_bmi_boxplot.pdf")
 p <- ggplot(data, aes(factor(AUFNDATUM.YEAR), bmi)) + geom_boxplot()
 p + labs(x = "Jahr", y = "BMI")
+dev.off()
+
+pdf("plots/02_bmi_gruppen.pdf")
+p <- ggplot(data, aes(factor(AUFNDATUM.YEAR), fill=factor(bmi_gruppe))) +
+  geom_bar(position=position_dodge(width = .8), width = 0.7)
+p + scale_fill_discrete(name="Gruppen",
+                        labels=c("<17.5", "17.5-23.9", "24.0-33.9", ">34")) +
+  labs(x = "Jahr", y = "Anzahl")
 dev.off()
 
 # ---------------------------------------------------------------------------------------------------
