@@ -1,14 +1,39 @@
 ## Laden der Daten und Pakete, eventuell Formatierung der Spalten
 library(Hmisc)
-data <- spss.get("Testdatei_NPE.sav", use.value.labels=TRUE)
+data <- spss.get("PE_2001-2009.sav", use.value.labels=TRUE)
 
 # Aufnahmedatum splitten
 data$AUFNDATUM <- as.Date(data$AUFNDATUM, "%d.%m.%y")
 data$AUFNDATUM.YEAR <- as.numeric(format(data$AUFNDATUM,"%Y"))
 data$AUFNDATUM.MONTH <- format(data$AUFNDATUM,"%m")
 
+# --------------------------------------------------------------------
+# Datensatz aufräumen
+# --------------------------------------------------------------------
+print(nrow(data))
+
+# Schritt 1: AUFNDATUM.YEAR darf nur in [2001,2009] liegen
+data <- data[!is.na(data$LAENGE) & data$AUFNDATUM.YEAR >= 2001 & data$AUFNDATUM.YEAR <= 2009, ]
+print(nrow(data))
+
+# Schritt 2: LAENGE darf nur in [100, 250] liegen und muss eingetragen sein
+data <- data[!is.na(data$LAENGE) & data$LAENGE >= 100 & data$LAENGE <= 250, ]
+print(nrow(data))
+
+# Schritt 3: GEBJAHR der Mutter muss eingetragen sein
+data <- data[!is.na(data$GEBJAHR), ]
+print(nrow(data))
+
 # Alter berechnen
 data$alter <- (as.numeric(data$AUFNDATUM.YEAR) - data$GEBJAHR)
+
+# Schritt 4: Alter muss größer als 14 sein
+data <- data[data$alter>=10, ]
+print(nrow(data))
+
+# Schritt 5: Gewicht bei Erstuntersuchung muss in [20, 250] liegen und gesetzt sein
+data <- data[data$KGERSTUNT>20 & data$KGERSTUNT<250 & !is.na(data$KGERSTUNT), ]
+print(nrow(data))
 
 # BMI berechnen
 data$bmi <- data$KGERSTUNT / (data$LAENGE/100)^2
