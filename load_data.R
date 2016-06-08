@@ -17,7 +17,7 @@ data <- data[!is.na(data$LAENGE) & data$AUFNDATUM.YEAR >= 2001 & data$AUFNDATUM.
 print(nrow(data))
 
 # Schritt 2: LAENGE darf nur in [100, 250] liegen und muss eingetragen sein
-data <- data[!is.na(data$LAENGE) & data$LAENGE >= 100 & data$LAENGE <= 250, ]
+data <- data[!is.na(data$LAENGE) & data$LAENGE >= 130 & data$LAENGE <= 250, ]
 print(nrow(data))
 
 # Schritt 3: GEBJAHR der Mutter muss eingetragen sein
@@ -32,11 +32,11 @@ data <- data[data$alter>=10, ]
 print(nrow(data))
 
 # Schritt 5: Gewicht bei Erstuntersuchung muss in [20, 250] liegen und gesetzt sein
-data <- data[data$KGERSTUNT>20 & data$KGERSTUNT<250 & !is.na(data$KGERSTUNT), ]
+data <- data[data$KGERSTUNT>40 & data$KGERSTUNT<250 & !is.na(data$KGERSTUNT), ]
 print(nrow(data))
 
 # BMI berechnen
-data$bmi <- data$KGERSTUNT / (data$LAENGE/100)^2
+data$bmi <- as.numeric(data$KGERSTUNT) / ((as.numeric(data$LAENGE)/100)^2)
 
 # --------------------------------------------------------------------
 # Untergruppen
