@@ -1,37 +1,6 @@
-# Skripte zur Masterarbeit
-
-Dieses Repository enthalten die Skripte für die Auswertung in der
-Masterarbeit:
-
-```
-Heike Balke
-Eine Betrachtung der Präeklampsie in Niedersachsen von 2001 bis 2009
-Masterarbeit
-fhg – Zentrum für Gesundheitsberufe Tirol GmbH
-```
-
-Es handelt sich hierbei ausschließlich um R-Skripte.
-
-Die zugehörigen Daten stammen von dem Zentrum für Qualität und Management
-im Gesundheitswesen (ZQ) Hannover.
-
-Betreuerin: Dr. med. Christine A. Morfeld
-
-Statistische Auswertung: Dipl.-Ing. Stefan Balke
-
-## Installation
-
-Um die notwendigen Pakete zu installieren:
-
-```
-source("install_requirements.r")
-```
-
-ausführen.
-
 ## ISC License
 
-Copyright (c) 2016, Heike and Stefan Balke.
+Copyright (c) 2016, librosa development team.
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
