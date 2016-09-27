@@ -5,11 +5,16 @@ source('load_data.R')
 library(ggplot2)
 library(ggthemes)
 
+Mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
 print_stats_metrical <- function(my_var){
   print(sprintf("Stichprobenumfang: %f", length(my_var)))
   print(sprintf("Mittelwert: %.02f", mean(my_var)))
   print(sprintf("Median: %.02f", median(my_var)))
-  print(sprintf("Modalwert: %.02f", which.max(table(my_var))))
+  print(sprintf("Modalwert: %.02f", Mode(my_var)))
   print(sprintf("Min: %.02f, Max: %.02f", min(my_var), max(my_var)))
   print(sprintf("Quantile:"))
   print(quantile(my_var))
@@ -47,8 +52,8 @@ p + geom_boxplot(width=0.5) + theme_hc() +
   guides(fill = guide_legend(reverse = TRUE))
 ggsave("plots/01_alter_komplett.pdf")
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 60000) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -56,7 +61,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="Altersgruppen",
                         labels=c("<20", "20-35", ">35")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/01_alter_gruppen.pdf", width = 20, height = 12, units = "cm")
 
 # Alter Erstgebärende
@@ -66,8 +71,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 30000) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -75,7 +80,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="Altersgruppen",
                         labels=c("<20", "20-35", ">35")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/01_alter_gruppen_erstgeb.pdf", width = 20, height = 12, units = "cm")
 
 # ---------------------------------------------------------------------------------------------------
@@ -100,8 +105,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 43000) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 70) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -112,7 +117,7 @@ p + scale_fill_discrete(name="BMI-Gruppen",
                                  "25.0-29.9 = übergewichtig",
                                  ">30 = adipös")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/02_bmi_gruppen.pdf", width = 20, height = 12, units = "cm")
 
 # ---------------------------------------------------------------------------------------------------
@@ -123,8 +128,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 70000) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -132,7 +137,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="Gruppen",
                         labels=c("Einling", "Mehrlinge")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/03_einling_mehrling.pdf", width = 20, height = 12, units = "cm")
 
 # ---------------------------------------------------------------------------------------------------
@@ -143,8 +148,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 37000) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 60) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -152,7 +157,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="Gruppen",
                         labels=c("Erstgeb.", "Mehrgeb.")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/04_erst_mehrgeb.pdf", width = 20, height = 12, units = "cm")
 
 # ---------------------------------------------------------------------------------------------------
@@ -163,8 +168,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 70000) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -172,7 +177,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="SSW-Gruppen",
                         labels=c("<24", "24-34", ">34.0", ">34")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/05_ssw_gruppen.pdf", width = 20, height = 12, units = "cm")
 
 # ---------------------------------------------------------------------------------------------------
@@ -183,8 +188,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 60000) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -192,7 +197,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="Gruppen",
                         labels=c("Deutschland", "Mittel- u. Nord-EU", "Mittelmeerl.", "Ost-EU", "Mittlerer O.", "Asien", "Sonst.")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/06_herkunftsland.pdf", width = 20, height = 20, units = "cm")
 
 # ---------------------------------------------------------------------------------------------------
@@ -203,8 +208,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 50000) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -212,7 +217,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="Gruppen",
                         labels=c("Vaginal", "Sectio")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/07_entbindungsmodus.pdf", width = 20, height = 20, units = "cm")
 
 # ---------------------------------------------------------------------------------------------------
@@ -278,7 +283,7 @@ group_data <- data.frame(group_data)
 group_data$scaler <- table(data$AUFNDATUM.YEAR)
 
 p <- ggplot(group_data, aes(x=Var1, y=Freq)) +
-  geom_bar(position="dodge", stat="identity", fill="steelblue") + ylim(0, 650) +
+  geom_bar(position="dodge", stat="identity", fill="steelblue") + ylim(0, 600) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var1, label=paste0(round(Freq/scaler*100,2),"%")), size=3,
@@ -300,7 +305,7 @@ group_data <- data.frame(group_data)
 group_data$scaler <- table(data$AUFNDATUM.YEAR)
 
 p <- ggplot(group_data, aes(x=Var1, y=Freq)) +
-  geom_bar(position="dodge", stat="identity", fill="steelblue") + ylim(0, 1300) +
+  geom_bar(position="dodge", stat="identity", fill="steelblue") + ylim(0, 1200) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var1, label=paste0(round(Freq/scaler*100,2),"%")), size=3,
@@ -314,8 +319,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 800) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -323,7 +328,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="Gruppen",
                         labels=c("Erstgeb.", "Mehrgeb.")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/trend_group04_erst_mehrgeb.pdf", width = 20, height = 12, units = "cm")
 
 # Alter Erstgebärende
@@ -333,8 +338,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 700) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -342,7 +347,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="Altersgruppen",
                         labels=c("<20", "20-35", ">35")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/trend_group04_erstgeb.pdf", width = 20, height = 12, units = "cm")
 
 # Einling Mehrling
@@ -351,8 +356,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 1100) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -360,7 +365,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="Gruppen",
                         labels=c("Einling", "Mehrlinge")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/trend_group04_einling_mehrling.pdf", width = 20, height = 12, units = "cm")
 
 # SSW
@@ -369,8 +374,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 1100) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -378,7 +383,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="SSW-Gruppen",
                         labels=c("<24", "24-34", ">34.0", ">34")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/trend_group04_yearly.pdf", width = 20, height = 12, units = "cm")
 
 # BMI
@@ -387,8 +392,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 500) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 50) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -399,8 +404,26 @@ p + scale_fill_discrete(name="BMI-Gruppen",
                                  "25.0-29.9 = übergewichtig",
                                  ">30 = adipös")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/trend_group04_yearly_bmi.pdf", width = 20, height = 12, units = "cm")
+
+# Entbindungsmodus
+group_data <- table(group04$entmodus, group04$AUFNDATUM.YEAR)
+group_data <- data.frame(group_data)
+aggregation <- aggregate(Freq ~ Var2, group_data, sum)
+group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
+
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 80) +
+  geom_text(aes(y=0, label=Freq), size=2,
+            position=position_dodge(0.9), hjust=1) + 
+  geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
+            position=position_dodge(0.9), hjust=-0.1)
+p + scale_fill_discrete(name="Gruppen",
+                        labels=c("Vaginal", "Sectio")) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
+ggsave("plots/trend_group04_entbindungsmodus.pdf", width = 20, height = 20, units = "cm")
 
 
 # Gruppe 5
@@ -409,7 +432,7 @@ group_data <- data.frame(group_data)
 group_data$scaler <- table(data$AUFNDATUM.YEAR)
 
 p <- ggplot(group_data, aes(x=Var1, y=Freq)) +
-  geom_bar(position="dodge", stat="identity", fill="steelblue") + ylim(0, 70) +
+  geom_bar(position="dodge", stat="identity", fill="steelblue") + ylim(0, 75) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var1, label=paste0(round(Freq/scaler*100,2),"%")), size=3,
@@ -423,8 +446,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 40) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -432,7 +455,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="Gruppen",
                         labels=c("Erstgeb.", "Mehrgeb.")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/trend_group05_erst_mehrgeb.pdf", width = 20, height = 12, units = "cm")
 
 # Alter Erstgebärende
@@ -442,8 +465,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 40) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -451,7 +474,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="Altersgruppen",
                         labels=c("<20", "20-35", ">35")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/trend_group05_erstgeb.pdf", width = 20, height = 12, units = "cm")
 
 # Gruppe 6
@@ -505,8 +528,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 1100) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 100) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -514,7 +537,7 @@ p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
 p + scale_fill_discrete(name="SSW-Gruppen",
                         labels=c("<24", "24-34", ">34.0", ">34")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/trend_group0405_yearly.pdf", width = 20, height = 12, units = "cm")
 
 # BMI
@@ -523,8 +546,8 @@ group_data <- data.frame(group_data)
 aggregation <- aggregate(Freq ~ Var2, group_data, sum)
 group_data$scaler <- rep(aggregation$Freq, each=nlevels(group_data$Var1))
 
-p <- ggplot(group_data, aes(x=Var2, y=Freq, fill=factor(Var1))) +
-  geom_bar(position="dodge", stat="identity") + ylim(0, 500) +
+p <- ggplot(group_data, aes(x=Var2, y=Freq/scaler*100, fill=factor(Var1))) +
+  geom_bar(position="dodge", stat="identity") + ylim(0, 50) +
   geom_text(aes(y=0, label=Freq), size=2,
             position=position_dodge(0.9), hjust=1) + 
   geom_text(aes(x=Var2, label=paste0(round(Freq/scaler*100,1),"%")), size=3,
@@ -535,6 +558,6 @@ p + scale_fill_discrete(name="BMI-Gruppen",
                                  "25.0-29.9 = übergewichtig",
                                  ">30 = adipös")) +
   guides(fill = guide_legend(reverse = TRUE)) +
-  labs(x = "Jahr", y = "Anzahl") + coord_flip()
+  labs(x = "Jahr", y = "Anzahl in Prozent (%)") + coord_flip()
 ggsave("plots/trend_group0405_yearly_bmi.pdf", width = 20, height = 12, units = "cm")
 

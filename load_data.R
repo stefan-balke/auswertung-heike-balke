@@ -77,12 +77,60 @@ data[data$HERKUNFTAND==6 & !is.na(data$HERKUNFTAND), ]$land = 7
 # Entbindungsmodus
 # 1=spontan, 2=sectio
 data$entmodus <- rep(NA, nrow(data))
-data[grepl("9-260", data$ENTBINDMODUS) | grepl("9-261", data$ENTBINDMODUS) & !is.na(data$ENTBINDMODUS), ]$entmodus = 1
+data[grepl("9-260", data$ENTBINDMODUS) |
+     grepl("9-261", data$ENTBINDMODUS) |
+     grepl("5-720", data$ENTBINDMODUS) |
+     grepl("5-720.0", data$ENTBINDMODUS) |
+     grepl("5-720.1", data$ENTBINDMODUS) |
+     grepl("5-720.x", data$ENTBINDMODUS) |
+     grepl("5-720.y", data$ENTBINDMODUS) |
+     grepl("5-724", data$ENTBINDMODUS) |
+     grepl("5-725", data$ENTBINDMODUS) |
+     grepl("5-725.0", data$ENTBINDMODUS) |
+     grepl("5-725.1", data$ENTBINDMODUS) |
+     grepl("5-725.2", data$ENTBINDMODUS) |
+     grepl("5-725.x", data$ENTBINDMODUS) |
+     grepl("5-725.y", data$ENTBINDMODUS) |
+     grepl("5-727", data$ENTBINDMODUS) |
+     grepl("5-727.0", data$ENTBINDMODUS) |
+     grepl("5-727.1", data$ENTBINDMODUS) |
+     grepl("5-727.2", data$ENTBINDMODUS) |
+     grepl("5-727.3", data$ENTBINDMODUS) |
+     grepl("5-727.x", data$ENTBINDMODUS) |
+     grepl("5-727.y", data$ENTBINDMODUS) |
+     grepl("5-728", data$ENTBINDMODUS) |
+     grepl("5-728.0", data$ENTBINDMODUS) |
+     grepl("5-728.1", data$ENTBINDMODUS) |
+     grepl("5-728.x", data$ENTBINDMODUS) |
+     grepl("5-728.y", data$ENTBINDMODUS) |
+     grepl("5-729", data$ENTBINDMODUS) |
+     grepl("5-729", data$ENTBINDMODUS) &
+     !is.na(data$ENTBINDMODUS), ]$entmodus = 1
 data[grepl("5-740", data$ENTBINDMODUS) |
-       grepl("5-740.0", data$ENTBINDMODUS) |
-       grepl("5-740.1", data$ENTBINDMODUS) |
-       grepl("5-740.y", data$ENTBINDMODUS) &
-       !is.na(data$ENTBINDMODUS), ]$entmodus = 2
+     grepl("5-740.0", data$ENTBINDMODUS) |
+     grepl("5-740.1", data$ENTBINDMODUS) |
+     grepl("5-741", data$ENTBINDMODUS) |
+     grepl("5-741.0", data$ENTBINDMODUS) |
+     grepl("5-741.1", data$ENTBINDMODUS) |
+     grepl("5-741.2", data$ENTBINDMODUS) |
+     grepl("5-741.3", data$ENTBINDMODUS) |
+     grepl("5-741.4", data$ENTBINDMODUS) |
+     grepl("5-741.5", data$ENTBINDMODUS) |
+     grepl("5-741.x", data$ENTBINDMODUS) |
+     grepl("5-741.y", data$ENTBINDMODUS) |
+     grepl("5-742", data$ENTBINDMODUS) |
+     grepl("5-742.0", data$ENTBINDMODUS) |
+     grepl("5-741.1", data$ENTBINDMODUS) |
+     grepl("5-741.y", data$ENTBINDMODUS) |
+     grepl("5-749", data$ENTBINDMODUS) |
+     grepl("5-749.0", data$ENTBINDMODUS) |
+     grepl("5-749.1", data$ENTBINDMODUS) |
+     grepl("5-749.10", data$ENTBINDMODUS) |
+     grepl("5-749.11", data$ENTBINDMODUS) |
+     grepl("5-749.x", data$ENTBINDMODUS) |
+     grepl("5-749.y", data$ENTBINDMODUS) |
+     grepl("5-740.y", data$ENTBINDMODUS) &
+     !is.na(data$ENTBINDMODUS), ]$entmodus = 2
 
 # Erst- oder Mehrgebärende
 data$geburten <- rep(NA, nrow(data))
@@ -113,121 +161,121 @@ data[data$alter>=35, ]$alter_gruppe = 2
 # --------------------------------------------------------------------
 # Gruppe 1: Vorher bestehende Hypertonie
 group01 <- subset(data, grepl("O10.-", data$AUFNDIAG.1) |
-                    grepl("O10.-", data$AUFNDIAG2) | 
-                    grepl("O10.0", data$AUFNDIAG.1) |
-                    grepl("O10.0", data$AUFNDIAG2) |
-                    grepl("O10.9", data$AUFNDIAG.1) |
-                    grepl("O10.9", data$AUFNDIAG2))
+                        grepl("O10.-", data$AUFNDIAG2) | 
+                        grepl("O10.0", data$AUFNDIAG.1) |
+                        grepl("O10.0", data$AUFNDIAG2) |
+                        grepl("O10.9", data$AUFNDIAG.1) |
+                        grepl("O10.9", data$AUFNDIAG2))
 
 # Gruppe 2: Hypertonie nicht näher definiert
 group02 <- subset(data, grepl("O16", data$AUFNDIAG.1) | 
-                    grepl("O16", data$AUFNDIAG2) |
-                    grepl(46, data$STATAUFIND.1) |
-                    grepl(46, data$STATAUFIND.2) |
-                    grepl(46, data$SSRISIKO.1) |
-                    grepl(46, data$SSRISIKO.2) |
-                    grepl(46, data$SSRISIKO.3) |
-                    grepl(46, data$SSRISIKO.4) |
-                    grepl(46, data$SSRISIKO.5) |
-                    grepl(46, data$SSRISIKO.6) |
-                    grepl(46, data$SSRISIKO.7) |
-                    grepl(46, data$SSRISIKO.8) |
-                    grepl(46, data$SSRISIKO.9) |
-                    grepl(2, data$DPPLSOVSIND.1) |
-                    grepl(2, data$DPPLSOVSIND.2) |
-                    grepl(2, data$DPPLSONOIND.1) |
-                    grepl(2, data$DPPLSONOIND.2) |
-                    grepl(2, data$DPPLSONOIND.3) |
-                    grepl(2, data$DPPLSONOIND.4) |
-                    grepl(66, data$GEBRISIKO.1) |
-                    grepl(66, data$GEBRISIKO.2) |
-                    grepl(66, data$GEBRISIKO.3) |
-                    grepl(66, data$GEBRISIKO.4) |
-                    grepl(66, data$GEBRISIKO.5) |
-                    grepl(66, data$GEBRISIKO.6) |
-                    grepl(66, data$GEBRISIKO.7) |
-                    grepl(66, data$GEBRISIKO.8) |
-                    grepl(66, data$GEBRISIKO.9) |
-                    grepl(66, data$GEBRISIKO.10))
+                        grepl("O16", data$AUFNDIAG2) |
+                        grepl(46, data$STATAUFIND.1) |
+                        grepl(46, data$STATAUFIND.2) |
+                        grepl(46, data$SSRISIKO.1) |
+                        grepl(46, data$SSRISIKO.2) |
+                        grepl(46, data$SSRISIKO.3) |
+                        grepl(46, data$SSRISIKO.4) |
+                        grepl(46, data$SSRISIKO.5) |
+                        grepl(46, data$SSRISIKO.6) |
+                        grepl(46, data$SSRISIKO.7) |
+                        grepl(46, data$SSRISIKO.8) |
+                        grepl(46, data$SSRISIKO.9) |
+                        grepl(2, data$DPPLSOVSIND.1) |
+                        grepl(2, data$DPPLSOVSIND.2) |
+                        grepl(2, data$DPPLSONOIND.1) |
+                        grepl(2, data$DPPLSONOIND.2) |
+                        grepl(2, data$DPPLSONOIND.3) |
+                        grepl(2, data$DPPLSONOIND.4) |
+                        grepl(66, data$GEBRISIKO.1) |
+                        grepl(66, data$GEBRISIKO.2) |
+                        grepl(66, data$GEBRISIKO.3) |
+                        grepl(66, data$GEBRISIKO.4) |
+                        grepl(66, data$GEBRISIKO.5) |
+                        grepl(66, data$GEBRISIKO.6) |
+                        grepl(66, data$GEBRISIKO.7) |
+                        grepl(66, data$GEBRISIKO.8) |
+                        grepl(66, data$GEBRISIKO.9) |
+                        grepl(66, data$GEBRISIKO.10))
 
 # Gruppe 3: Gastationshypertonie
 group03 <- subset(data, grepl("O13", data$AUFNDIAG.1) |
-                    grepl("O13", data$AUFNDIAG2))
+                        grepl("O13", data$AUFNDIAG2))
 
 # Gruppe 4: Präeklampsie
 group04 <- subset(data, grepl("O14.-", data$AUFNDIAG.1) |
-                    grepl("O14.-", data$AUFNDIAG2) | 
-                    grepl("O14.0", data$AUFNDIAG.1) |
-                    grepl("O14.0", data$AUFNDIAG2) |
-                    grepl("O14.1", data$AUFNDIAG.1) |
-                    grepl("O14.1", data$AUFNDIAG2) |
-                    grepl("O14.9", data$AUFNDIAG.1) |
-                    grepl("O14.9", data$AUFNDIAG2))
+                        grepl("O14.-", data$AUFNDIAG2) | 
+                        grepl("O14.0", data$AUFNDIAG.1) |
+                        grepl("O14.0", data$AUFNDIAG2) |
+                        grepl("O14.1", data$AUFNDIAG.1) |
+                        grepl("O14.1", data$AUFNDIAG2) |
+                        grepl("O14.9", data$AUFNDIAG.1) |
+                        grepl("O14.9", data$AUFNDIAG2))
 
 # Gruppe 5: Pfropfpräeklampsie
 group05 <- subset(data, grepl("O11", data$AUFNDIAG.1) |
-                    grepl("O11", data$AUFNDIAG2))
+                        grepl("O11", data$AUFNDIAG2))
 
 # Gruppe 6: HELLP-Syndropm
 group06 <- subset(data, grepl("O14.2", data$AUFNDIAG.1) |
-                    grepl("O14.2", data$AUFNDIAG2) |
-                    grepl(95, data$GEBRISIKO.1) |
-                    grepl(95, data$GEBRISIKO.2) |
-                    grepl(95, data$GEBRISIKO.3) |
-                    grepl(95, data$GEBRISIKO.4) |
-                    grepl(95, data$GEBRISIKO.5) |
-                    grepl(95, data$GEBRISIKO.6) |
-                    grepl(95, data$GEBRISIKO.7) |
-                    grepl(95, data$GEBRISIKO.8) |
-                    grepl(95, data$GEBRISIKO.9) |
-                    grepl(95, data$GEBRISIKO.10))
+                        grepl("O14.2", data$AUFNDIAG2) |
+                        grepl(95, data$GEBRISIKO.1) |
+                        grepl(95, data$GEBRISIKO.2) |
+                        grepl(95, data$GEBRISIKO.3) |
+                        grepl(95, data$GEBRISIKO.4) |
+                        grepl(95, data$GEBRISIKO.5) |
+                        grepl(95, data$GEBRISIKO.6) |
+                        grepl(95, data$GEBRISIKO.7) |
+                        grepl(95, data$GEBRISIKO.8) |
+                        grepl(95, data$GEBRISIKO.9) |
+                        grepl(95, data$GEBRISIKO.10))
 
 # Gruppe 7: z. N. hypertensiven Erkrankung
 group07 <- subset(data, grepl(54, data$STATAUFIND.1) |
-                    grepl(54, data$STATAUFIND.2) |
-                    grepl(55, data$STATAUFIND.1) |
-                    grepl(55, data$STATAUFIND.2) |
-                    grepl(56, data$STATAUFIND.1) |
-                    grepl(56, data$STATAUFIND.2) |
-                    grepl(54, data$SSRISIKO.1) |
-                    grepl(54, data$SSRISIKO.2) |
-                    grepl(54, data$SSRISIKO.3) |
-                    grepl(54, data$SSRISIKO.4) |
-                    grepl(54, data$SSRISIKO.5) |
-                    grepl(54, data$SSRISIKO.6) |
-                    grepl(54, data$SSRISIKO.7) |
-                    grepl(54, data$SSRISIKO.8) |
-                    grepl(54, data$SSRISIKO.9) |
-                    grepl(55, data$SSRISIKO.1) |
-                    grepl(55, data$SSRISIKO.2) |
-                    grepl(55, data$SSRISIKO.3) |
-                    grepl(55, data$SSRISIKO.4) |
-                    grepl(55, data$SSRISIKO.5) |
-                    grepl(55, data$SSRISIKO.6) |
-                    grepl(55, data$SSRISIKO.7) |
-                    grepl(55, data$SSRISIKO.8) |
-                    grepl(55, data$SSRISIKO.9) |
-                    grepl(56, data$SSRISIKO.1) |
-                    grepl(56, data$SSRISIKO.2) |
-                    grepl(56, data$SSRISIKO.3) |
-                    grepl(56, data$SSRISIKO.4) |
-                    grepl(56, data$SSRISIKO.5) |
-                    grepl(56, data$SSRISIKO.6) |
-                    grepl(56, data$SSRISIKO.7) |
-                    grepl(56, data$SSRISIKO.8) |
-                    grepl(56, data$SSRISIKO.9) |
-                    grepl(4, data$DPPLSOVSIND.1) |
-                    grepl(4, data$DPPLSOVSIND.2) |
-                    grepl(4, data$DPPLSONOIND.1) |
-                    grepl(4, data$DPPLSONOIND.2) |
-                    grepl(4, data$DPPLSONOIND.3) |
-                    grepl(4, data$DPPLSONOIND.4))
+                        grepl(54, data$STATAUFIND.2) |
+                        grepl(55, data$STATAUFIND.1) |
+                        grepl(55, data$STATAUFIND.2) |
+                        grepl(56, data$STATAUFIND.1) |
+                        grepl(56, data$STATAUFIND.2) |
+                        grepl(54, data$SSRISIKO.1) |
+                        grepl(54, data$SSRISIKO.2) |
+                        grepl(54, data$SSRISIKO.3) |
+                        grepl(54, data$SSRISIKO.4) |
+                        grepl(54, data$SSRISIKO.5) |
+                        grepl(54, data$SSRISIKO.6) |
+                        grepl(54, data$SSRISIKO.7) |
+                        grepl(54, data$SSRISIKO.8) |
+                        grepl(54, data$SSRISIKO.9) |
+                        grepl(55, data$SSRISIKO.1) |
+                        grepl(55, data$SSRISIKO.2) |
+                        grepl(55, data$SSRISIKO.3) |
+                        grepl(55, data$SSRISIKO.4) |
+                        grepl(55, data$SSRISIKO.5) |
+                        grepl(55, data$SSRISIKO.6) |
+                        grepl(55, data$SSRISIKO.7) |
+                        grepl(55, data$SSRISIKO.8) |
+                        grepl(55, data$SSRISIKO.9) |
+                        grepl(56, data$SSRISIKO.1) |
+                        grepl(56, data$SSRISIKO.2) |
+                        grepl(56, data$SSRISIKO.3) |
+                        grepl(56, data$SSRISIKO.4) |
+                        grepl(56, data$SSRISIKO.5) |
+                        grepl(56, data$SSRISIKO.6) |
+                        grepl(56, data$SSRISIKO.7) |
+                        grepl(56, data$SSRISIKO.8) |
+                        grepl(56, data$SSRISIKO.9) |
+                        grepl(4, data$DPPLSOVSIND.1) |
+                        grepl(4, data$DPPLSOVSIND.2) |
+                        grepl(4, data$DPPLSONOIND.1) |
+                        grepl(4, data$DPPLSONOIND.2) |
+                        grepl(4, data$DPPLSONOIND.3) |
+                        grepl(4, data$DPPLSONOIND.4))
 
 # Gruppe 8: Eklampsie
 group08 <- subset(data, grepl("O15", data$AUFNDIAG.1) |
-                    grepl("O15", data$AUFNDIAG2) | 
-                    grepl("O15.0", data$AUFNDIAG.1) |
-                    grepl("O15.0", data$AUFNDIAG2))
+                  grepl("O15", data$AUFNDIAG2) | 
+                  grepl("O15.0", data$AUFNDIAG.1) |
+                  grepl("O15.0", data$AUFNDIAG2))
 
 # --------------------------------------------------------------------
 # Hilfsvariablen
@@ -243,76 +291,76 @@ data$PE <- ifelse(grepl("O14.-", data$AUFNDIAG.1) |
                   grepl("O14.9", data$AUFNDIAG2), TRUE, FALSE)
 
 data$hypertonie <- ifelse(grepl("O16", data$AUFNDIAG.1) | 
-                            grepl("O16", data$AUFNDIAG2) |
-                            grepl(23, data$SSRISIKO.1) |
-                            grepl(23, data$SSRISIKO.2) |
-                            grepl(23, data$SSRISIKO.3) |
-                            grepl(23, data$SSRISIKO.4) |
-                            grepl(23, data$SSRISIKO.5) |
-                            grepl(23, data$SSRISIKO.6) |
-                            grepl(23, data$SSRISIKO.7) |
-                            grepl(23, data$SSRISIKO.8) |
-                            grepl(23, data$SSRISIKO.9) |
-                            grepl(2, data$DPPLSOVSIND.1) |
-                            grepl(2, data$DPPLSOVSIND.2) |
-                            grepl(66, data$GEBRISIKO.1) |
-                            grepl(66, data$GEBRISIKO.2) |
-                            grepl(66, data$GEBRISIKO.3) |
-                            grepl(66, data$GEBRISIKO.4) |
-                            grepl(66, data$GEBRISIKO.5) |
-                            grepl(66, data$GEBRISIKO.6) |
-                            grepl(66, data$GEBRISIKO.7) |
-                            grepl(66, data$GEBRISIKO.8) |
-                            grepl(66, data$GEBRISIKO.9) |
-                            grepl(66, data$GEBRISIKO.10), TRUE, FALSE)
+                          grepl("O16", data$AUFNDIAG2) |
+                          grepl(23, data$SSRISIKO.1) |
+                          grepl(23, data$SSRISIKO.2) |
+                          grepl(23, data$SSRISIKO.3) |
+                          grepl(23, data$SSRISIKO.4) |
+                          grepl(23, data$SSRISIKO.5) |
+                          grepl(23, data$SSRISIKO.6) |
+                          grepl(23, data$SSRISIKO.7) |
+                          grepl(23, data$SSRISIKO.8) |
+                          grepl(23, data$SSRISIKO.9) |
+                          grepl(2, data$DPPLSOVSIND.1) |
+                          grepl(2, data$DPPLSOVSIND.2) |
+                          grepl(66, data$GEBRISIKO.1) |
+                          grepl(66, data$GEBRISIKO.2) |
+                          grepl(66, data$GEBRISIKO.3) |
+                          grepl(66, data$GEBRISIKO.4) |
+                          grepl(66, data$GEBRISIKO.5) |
+                          grepl(66, data$GEBRISIKO.6) |
+                          grepl(66, data$GEBRISIKO.7) |
+                          grepl(66, data$GEBRISIKO.8) |
+                          grepl(66, data$GEBRISIKO.9) |
+                          grepl(66, data$GEBRISIKO.10), TRUE, FALSE)
 
 # Zustand nach hypertonischer Erkrankung binär kodiert
 data$znhypertonie <- ifelse(grepl(54, data$STATAUFIND.1) |
-                              grepl(54, data$STATAUFIND.2) |
-                              grepl(55, data$STATAUFIND.1) |
-                              grepl(55, data$STATAUFIND.2) |
-                              grepl(56, data$STATAUFIND.1) |
-                              grepl(56, data$STATAUFIND.2) |
-                              grepl(54, data$SSRISIKO.1) |
-                              grepl(54, data$SSRISIKO.2) |
-                              grepl(54, data$SSRISIKO.3) |
-                              grepl(54, data$SSRISIKO.4) |
-                              grepl(54, data$SSRISIKO.5) |
-                              grepl(54, data$SSRISIKO.6) |
-                              grepl(54, data$SSRISIKO.7) |
-                              grepl(54, data$SSRISIKO.8) |
-                              grepl(54, data$SSRISIKO.9) |
-                              grepl(55, data$SSRISIKO.1) |
-                              grepl(55, data$SSRISIKO.2) |
-                              grepl(55, data$SSRISIKO.3) |
-                              grepl(55, data$SSRISIKO.4) |
-                              grepl(55, data$SSRISIKO.5) |
-                              grepl(55, data$SSRISIKO.6) |
-                              grepl(55, data$SSRISIKO.7) |
-                              grepl(55, data$SSRISIKO.8) |
-                              grepl(55, data$SSRISIKO.9) |
-                              grepl(56, data$SSRISIKO.1) |
-                              grepl(56, data$SSRISIKO.2) |
-                              grepl(56, data$SSRISIKO.3) |
-                              grepl(56, data$SSRISIKO.4) |
-                              grepl(56, data$SSRISIKO.5) |
-                              grepl(56, data$SSRISIKO.6) |
-                              grepl(56, data$SSRISIKO.7) |
-                              grepl(56, data$SSRISIKO.8) |
-                              grepl(56, data$SSRISIKO.9) |
-                              grepl(4, data$DPPLSOVSIND.1) |
-                              grepl(4, data$DPPLSOVSIND.2) |
-                              grepl(4, data$DPPLSONOIND.1) |
-                              grepl(4, data$DPPLSONOIND.2) |
-                              grepl(4, data$DPPLSONOIND.3) |
-                              grepl(4, data$DPPLSONOIND.4), TRUE, FALSE)
+                            grepl(54, data$STATAUFIND.2) |
+                            grepl(55, data$STATAUFIND.1) |
+                            grepl(55, data$STATAUFIND.2) |
+                            grepl(56, data$STATAUFIND.1) |
+                            grepl(56, data$STATAUFIND.2) |
+                            grepl(54, data$SSRISIKO.1) |
+                            grepl(54, data$SSRISIKO.2) |
+                            grepl(54, data$SSRISIKO.3) |
+                            grepl(54, data$SSRISIKO.4) |
+                            grepl(54, data$SSRISIKO.5) |
+                            grepl(54, data$SSRISIKO.6) |
+                            grepl(54, data$SSRISIKO.7) |
+                            grepl(54, data$SSRISIKO.8) |
+                            grepl(54, data$SSRISIKO.9) |
+                            grepl(55, data$SSRISIKO.1) |
+                            grepl(55, data$SSRISIKO.2) |
+                            grepl(55, data$SSRISIKO.3) |
+                            grepl(55, data$SSRISIKO.4) |
+                            grepl(55, data$SSRISIKO.5) |
+                            grepl(55, data$SSRISIKO.6) |
+                            grepl(55, data$SSRISIKO.7) |
+                            grepl(55, data$SSRISIKO.8) |
+                            grepl(55, data$SSRISIKO.9) |
+                            grepl(56, data$SSRISIKO.1) |
+                            grepl(56, data$SSRISIKO.2) |
+                            grepl(56, data$SSRISIKO.3) |
+                            grepl(56, data$SSRISIKO.4) |
+                            grepl(56, data$SSRISIKO.5) |
+                            grepl(56, data$SSRISIKO.6) |
+                            grepl(56, data$SSRISIKO.7) |
+                            grepl(56, data$SSRISIKO.8) |
+                            grepl(56, data$SSRISIKO.9) |
+                            grepl(4, data$DPPLSOVSIND.1) |
+                            grepl(4, data$DPPLSOVSIND.2) |
+                            grepl(4, data$DPPLSONOIND.1) |
+                            grepl(4, data$DPPLSONOIND.2) |
+                            grepl(4, data$DPPLSONOIND.3) |
+                            grepl(4, data$DPPLSONOIND.4), TRUE, FALSE)
 
 group01 <- subset(data, grepl("O10.-", data$AUFNDIAG.1) |
-                    grepl("O10.-", data$AUFNDIAG2) | 
-                    grepl("O10.0", data$AUFNDIAG.1) |
-                    grepl("O10.0", data$AUFNDIAG2) |
-                    grepl("O10.9", data$AUFNDIAG.1) |
-                    grepl("O10.9", data$AUFNDIAG2))
+                        grepl("O10.-", data$AUFNDIAG2) | 
+                        grepl("O10.0", data$AUFNDIAG.1) |
+                        grepl("O10.0", data$AUFNDIAG2) |
+                        grepl("O10.9", data$AUFNDIAG.1) |
+                        grepl("O10.9", data$AUFNDIAG2))
 
 # Vorher bestehende Hypertonie + Hypertonie nicht näher definiert
 data$hyper_bestehend <- ifelse(grepl("O10.-", data$AUFNDIAG.1) |
@@ -321,32 +369,32 @@ data$hyper_bestehend <- ifelse(grepl("O10.-", data$AUFNDIAG.1) |
                                  grepl("O10.0", data$AUFNDIAG2) |
                                  grepl("O10.9", data$AUFNDIAG.1) |
                                  grepl("O10.9", data$AUFNDIAG2) |
-                               grepl("O16", data$AUFNDIAG.1) | 
-                    grepl("O16", data$AUFNDIAG2) |
-                    grepl(46, data$STATAUFIND.1) |
-                    grepl(46, data$STATAUFIND.2) |
-                    grepl(46, data$SSRISIKO.1) |
-                    grepl(46, data$SSRISIKO.2) |
-                    grepl(46, data$SSRISIKO.3) |
-                    grepl(46, data$SSRISIKO.4) |
-                    grepl(46, data$SSRISIKO.5) |
-                    grepl(46, data$SSRISIKO.6) |
-                    grepl(46, data$SSRISIKO.7) |
-                    grepl(46, data$SSRISIKO.8) |
-                    grepl(46, data$SSRISIKO.9) |
-                    grepl(2, data$DPPLSOVSIND.1) |
-                    grepl(2, data$DPPLSOVSIND.2) |
-                    grepl(2, data$DPPLSONOIND.1) |
-                    grepl(2, data$DPPLSONOIND.2) |
-                    grepl(2, data$DPPLSONOIND.3) |
-                    grepl(2, data$DPPLSONOIND.4) |
-                    grepl(66, data$GEBRISIKO.1) |
-                    grepl(66, data$GEBRISIKO.2) |
-                    grepl(66, data$GEBRISIKO.3) |
-                    grepl(66, data$GEBRISIKO.4) |
-                    grepl(66, data$GEBRISIKO.5) |
-                    grepl(66, data$GEBRISIKO.6) |
-                    grepl(66, data$GEBRISIKO.7) |
-                    grepl(66, data$GEBRISIKO.8) |
-                    grepl(66, data$GEBRISIKO.9) |
-                    grepl(66, data$GEBRISIKO.10), TRUE, FALSE)
+                                 grepl("O16", data$AUFNDIAG.1) | 
+                                grepl("O16", data$AUFNDIAG2) |
+                                grepl(46, data$STATAUFIND.1) |
+                                grepl(46, data$STATAUFIND.2) |
+                                grepl(46, data$SSRISIKO.1) |
+                                grepl(46, data$SSRISIKO.2) |
+                                grepl(46, data$SSRISIKO.3) |
+                                grepl(46, data$SSRISIKO.4) |
+                                grepl(46, data$SSRISIKO.5) |
+                                grepl(46, data$SSRISIKO.6) |
+                                grepl(46, data$SSRISIKO.7) |
+                                grepl(46, data$SSRISIKO.8) |
+                                grepl(46, data$SSRISIKO.9) |
+                                grepl(2, data$DPPLSOVSIND.1) |
+                                grepl(2, data$DPPLSOVSIND.2) |
+                                grepl(2, data$DPPLSONOIND.1) |
+                                grepl(2, data$DPPLSONOIND.2) |
+                                grepl(2, data$DPPLSONOIND.3) |
+                                grepl(2, data$DPPLSONOIND.4) |
+                                grepl(66, data$GEBRISIKO.1) |
+                                grepl(66, data$GEBRISIKO.2) |
+                                grepl(66, data$GEBRISIKO.3) |
+                                grepl(66, data$GEBRISIKO.4) |
+                                grepl(66, data$GEBRISIKO.5) |
+                                grepl(66, data$GEBRISIKO.6) |
+                                grepl(66, data$GEBRISIKO.7) |
+                                grepl(66, data$GEBRISIKO.8) |
+                                grepl(66, data$GEBRISIKO.9) |
+                                grepl(66, data$GEBRISIKO.10), TRUE, FALSE)
